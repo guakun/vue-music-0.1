@@ -12,10 +12,20 @@
 
 <script>
 import { getRecommend } from 'api/recommend'
+import { ERROR_OK } from 'api/config'
 export default {
   name: 'Recommend',
   created () {
-    console.log('hello')
+    this._getRecommend()
+  },
+  methods: {
+    _getRecommend () {
+      getRecommend().then(res => {
+        if (res.code === ERROR_OK) {
+          console.log(res.data.slider)
+        }
+      })
+    }
   }
 }
 </script>

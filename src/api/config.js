@@ -7,7 +7,7 @@ export const commonParams = {
 }
 
 export const options = {
-  params: 'jp0'
+  param: 'jsonpCallback'
 }
 
 export const ERROR_OK = 0
