@@ -1,35 +1,37 @@
 <template>
   <div class="recommend">
-    <div class="recommend-content">
-      <div v-if="recommends.length" class="slider-wrapper">
-        <g-slider>
-          <div
-            v-for="(item, index) in recommends"
-            :key="index"
-          >
-            <a :href="item.linkUrl">
-              <img :src="item.picUrl" alt="">
-            </a>
-          </div>
-        </g-slider>
-      </div>
-      <div class="recommend-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul>
-          <li
-            v-for="(item, index) in discList"
-            :key="index"
-            class="item"
-          >
-            <div class="icon"><img :src="item.imgurl" alt="" width="60" height="60"></div>
-            <div class="text">
-              <h2 class="name" v-html="item.creator.name">{{item}}</h2>
-              <p class="desc" v-html="item.dissname">{{item}}</p>
+    <g-scroll class="recommend-content" :data="discList">
+      <div>
+        <div v-if="recommends.length" class="slider-wrapper">
+          <g-slider>
+            <div
+              v-for="(item, index) in recommends"
+              :key="index"
+            >
+              <a :href="item.linkUrl">
+                <img :src="item.picUrl" alt="">
+              </a>
             </div>
-          </li>
-        </ul>
+          </g-slider>
+        </div>
+        <div class="recommend-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul>
+            <li
+              v-for="(item, index) in discList"
+              :key="index"
+              class="item"
+            >
+              <div class="icon"><img :src="item.imgurl" alt="" width="60" height="60"></div>
+              <div class="text">
+                <h2 class="name" v-html="item.creator.name">{{item}}</h2>
+                <p class="desc" v-html="item.dissname">{{item}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </g-scroll>
   </div>
 </template>
 
@@ -37,11 +39,13 @@
 import { getRecommend, getDiscList } from 'api/recommend'
 import { ERROR_OK } from 'api/config'
 import GSlider from 'base/slider/slider'
+import GScroll from 'base/scroll/scroll'
 
 export default {
   name: 'Recommend',
   components: {
-    GSlider
+    GSlider,
+    GScroll
   },
   data () {
     return {
