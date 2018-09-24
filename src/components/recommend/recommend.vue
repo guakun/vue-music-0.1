@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { getRecommend } from 'api/recommend'
+import { getRecommend, getDiscList } from 'api/recommend'
 import { ERROR_OK } from 'api/config'
 import GSlider from 'base/slider/slider'
 
@@ -38,8 +38,16 @@ export default {
   },
   created () {
     this._getRecommend()
+    this._getDiscList()
   },
   methods: {
+    _getDiscList () {
+      getDiscList().then(res => {
+        if (res.code === ERROR_OK) {
+          console.log(res.data.list)
+        }
+      })
+    },
     _getRecommend () {
       getRecommend().then(res => {
         if (res.code === ERROR_OK) {
