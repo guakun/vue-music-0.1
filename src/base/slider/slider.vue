@@ -58,6 +58,9 @@ export default {
       this.slider.refresh()
     })
   },
+  destroyed () {
+    clearTimeout(this.timer)
+  },
   methods: {
     _initDots () {
       this.dots = new Array(this.children.length)
@@ -87,8 +90,7 @@ export default {
         snap: true,
         snapLoop: this.loop,
         snapThreshold: 0.3,
-        snapSpeed: 400,
-        click: true
+        snapSpeed: 400
       })
 
       this.slider.on('scrollEnd', () => {
