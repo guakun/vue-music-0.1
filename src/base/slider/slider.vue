@@ -17,7 +17,6 @@
 <script>
 import { addClass } from 'common/js/dom'
 import BScroll from 'better-scroll'
-import { setTimeout, clearTimeout } from 'timers';
 
 export default {
   name: 'MySlider',
@@ -51,12 +50,19 @@ export default {
         this._play()
       }
     }, 20)
+
+    window.addEventListener('resize', () => {
+      if (!this.slider) return
+
+      this._setSliderWidth(true)
+      this.slider.refresh()
+    })
   },
   methods: {
     _initDots () {
       this.dots = new Array(this.children.length)
     },
-    _setSliderWidth () {
+    _setSliderWidth (resizeStatus) {
       this.children = this.$refs.sliderGroup.children
       let width = 0
       let sliderWidth = this.$refs.slider.clientWidth
@@ -68,7 +74,7 @@ export default {
         width += sliderWidth
       }
 
-      if (this.loop) {
+      if (this.loop && !resizeStatus) {
         width += sliderWidth * 2
       }
       this.$refs.sliderGroup.style.width = width + 'px'
