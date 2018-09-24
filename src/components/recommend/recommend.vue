@@ -15,7 +15,19 @@
       </div>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
-        <ul></ul>
+        <ul>
+          <li
+            v-for="(item, index) in discList"
+            :key="index"
+            class="item"
+          >
+            <div class="icon"><img :src="item.imgurl" alt="" width="60" height="60"></div>
+            <div class="text">
+              <h2 class="name" v-html="item.creator.name">{{item}}</h2>
+              <p class="desc" v-html="item.dissname">{{item}}</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -33,7 +45,8 @@ export default {
   },
   data () {
     return {
-      recommends: []
+      recommends: [],
+      discList: []
     }
   },
   created () {
@@ -44,7 +57,7 @@ export default {
     _getDiscList () {
       getDiscList().then(res => {
         if (res.code === ERROR_OK) {
-          console.log(res.data.list)
+          this.discList = res.data.list
         }
       })
     },
@@ -73,7 +86,6 @@ export default {
       position relative
       overflow hidden
     .recommend-list
-      // border 10px solid #fff
       .list-title
         // border 10px solid red
         height 65px
@@ -81,5 +93,27 @@ export default {
         text-align center
         font-size $font-size-medium
         color $color-theme
-        // padding 0 20px 20px 20px
+      .item
+        // border 10px solid #fff
+        display flex
+        box-sizing border-box
+        align-items center
+        padding 0 20px 20px 20px
+      .icon
+        flex 0 0 60px
+        width 60px
+        padding-right 20px
+      .text
+        display flex
+        flex-direction column
+        justify-content center
+        flex 1
+        line-height 20px
+        overflow hidden
+        font-size $font-size-medium
+        .name
+          margin-bottom 10px
+          color: $color-text
+        .desc
+          color: $color-text-d
 </style>
