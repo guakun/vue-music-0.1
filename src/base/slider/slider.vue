@@ -9,7 +9,21 @@
 
 <script>
 export default {
-  name: 'MySlider'
+  name: 'MySlider',
+  props: {
+    loop: {
+      type: Boolean,
+      default: true
+    },
+    autoPlay: {
+      type: Boolean,
+      default: true
+    },
+    interval: {
+      type: Number,
+      default: 3000
+    }
+  }
 }
 </script>
 

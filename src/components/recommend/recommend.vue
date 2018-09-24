@@ -1,7 +1,15 @@
 <template>
   <div class="recommend">
     <div class="recommend-content">
-      <div class="slider-wrapper"></div>
+      <div class="slider-wrapper">
+        <g-slider>
+          <div v-for="(item, index) in recommends" :key="index">
+            <a :href="item.linkUrl">
+              <img :src="item.picUrl" alt="">
+            </a>
+          </div>
+        </g-slider>
+      </div>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
         <ul></ul>
@@ -13,8 +21,18 @@
 <script>
 import { getRecommend } from 'api/recommend'
 import { ERROR_OK } from 'api/config'
+import GSlider from 'base/slider/slider'
+
 export default {
   name: 'Recommend',
+  components: {
+    GSlider
+  },
+  data () {
+    return {
+      recommends: []
+    }
+  },
   created () {
     this._getRecommend()
   },
@@ -22,7 +40,7 @@ export default {
     _getRecommend () {
       getRecommend().then(res => {
         if (res.code === ERROR_OK) {
-          console.log(res.data.slider)
+          this.recommends = res.data.slider
         }
       })
     }
