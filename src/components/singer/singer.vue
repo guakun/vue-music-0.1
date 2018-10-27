@@ -26,13 +26,13 @@ export default {
       getSingerList().then((res) => {
         if (res.code === ERROR_OK) {
           this.singers = res.data.list
-          this._normalizeSinger(this.singers))
+          this._normalizeSinger(this.singers)
         }
       })
     },
     _normalizeSinger (list) {
       let map = {
-        hot: 
+        hot: {
           title: HOT_NAME,
           items: []
         }
