@@ -1,5 +1,5 @@
 <template>
-  <scroll class="listview" :data="data" ref="listview">
+  <scroll class="listview" :data="data" ref="listview" :listenScroll="listenScroll" @scroll="scroll">
     <ul>
       <li v-for="(group, index) in data" class="list-group" :key="index" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
@@ -23,6 +23,8 @@
 import Scroll from 'base/scroll/scroll'
 import { getData } from 'common/js/dom'
 
+const ANCHOR_HEIGHT = 18
+
 export default {
   name: 'ListView',
   components: {
@@ -41,14 +43,30 @@ export default {
       })
     }
   },
+  created () {
+    this.touch = {},
+    this.listenScroll = true
+  },
   methods: {
+    scroll (pos) {
+      console.log('pos', pos)
+    },
     onShortcutTouchMove (e) {
-      // let first
+      let firstTouch = e.touches[0]
+      this.touch.y2 = firstTouch.pageY
+      let delta = ( this.touch.y2 - this.touch.y1 ) / ANCHOR_HEIGHT | 0
+      let anchorIndex = this.touch.anchorIndex + delta - 0
+      this._scrollTo(anchorIndex)
     },
     onShortcutTouchStart (e) {
       let anchorIndex = getData(e.target, 'index')
-      // let firstTouch = e.touches[0]
-      this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
+      let firstTouch = e.touches[0]
+      this.touch.y1 = firstTouch.pageY
+      this.touch.anchorIndex = anchorIndex
+      this._scrollTo(anchorIndex)
+    },
+    _scrollTo (index) {
+      this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
     }
   }
 }
