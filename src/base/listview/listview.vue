@@ -72,12 +72,10 @@ export default {
       for (let i = 0; i < listHeight.length - 1; i++) {
         let height1 = listHeight[i]
         let height2 = listHeight[i + 1]
- 
+
         // 在中间部分滚动
-        // eslint-disable-next-line
-        if (!height2 || (-newY) > height1 && (-newY) < height2) {
+        if ((-newY) >= height1 && (-newY) < height2) {
           this.currentIndex = i
-          console.log('index', this.currentIndex)
           return
         }
       }
@@ -105,11 +103,11 @@ export default {
       let firstTouch = e.touches[0]
       this.touch.y2 = firstTouch.pageY
       let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
-      let anchorIndex = this.touch.anchorIndex + delta - 0
+      let anchorIndex = parseInt(this.touch.anchorIndex + delta)
       this._scrollTo(anchorIndex)
     },
     onShortcutTouchStart (e) {
-      let anchorIndex = getData(e.target, 'index')
+      let anchorIndex = parseInt(getData(e.target, 'index'))
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
       this.touch.anchorIndex = anchorIndex
@@ -125,9 +123,17 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
-      console.log(this.listHeight)
     },
     _scrollTo (index) {
+      if (!index && index !== 0) {
+        return
+      }
+      if (index < 0) {
+        index = 0
+      } else if (index > this.listHeight.length - 2) {
+        index = this.listHeight.length - 2
+      }
+      this.scrollY = -this.listHeight[index]
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
     }
   }
