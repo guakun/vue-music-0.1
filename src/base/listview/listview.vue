@@ -27,6 +27,9 @@
         >{{item}}</li>
       </ul>
     </div>
+    <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
   </scroll>
 </template>
 
@@ -35,6 +38,7 @@ import Scroll from 'base/scroll/scroll'
 import { getData } from 'common/js/dom'
 
 const ANCHOR_HEIGHT = 18
+const TITLE_HEIGHT = 30
 
 export default {
   name: 'ListView',
@@ -50,10 +54,17 @@ export default {
   data () {
     return {
       scrollY: -1,
-      currentIndex: 0
+      currentIndex: 0,
+      diff: -1
     }
   },
   computed: {
+    fixedTitle () {
+      if (this.scrollY > 0) {
+        return ''
+      }
+      return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+    },
     shortcutList () {
       return this.data.map((group) => {
         return group.title.substr(0, 1)
@@ -61,6 +72,14 @@ export default {
     }
   },
   watch: {
+    diff (newVal) {
+      let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+      if (this.fixedTop === fixedTop) {
+        return
+      }
+      this.fixedTop = fixedTop
+      this.$refs.fixed.style.transform = `translate3d(0, ${fixedTop}px, 0)`
+    },
     scrollY (newY) {
       const listHeight = this.listHeight
       // 当滚动到顶部, newY > 0
@@ -76,6 +95,7 @@ export default {
         // 在中间部分滚动
         if ((-newY) >= height1 && (-newY) < height2) {
           this.currentIndex = i
+          this.diff = height2 + newY
           return
         }
       }
@@ -189,4 +209,16 @@ export default {
       font-size $font-size-small
       &.current
         color $color-theme
+  .list-fixed
+    position absolute
+    top 0
+    left 0
+    width 100%
+    .fixed-title
+      height 30px
+      line-height 30px
+      padding-left 20px
+      font-size $font-size-small
+      color $color-text-l
+      background $color-highlight-background
 </style>
